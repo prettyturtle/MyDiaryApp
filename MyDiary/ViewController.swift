@@ -24,6 +24,18 @@ class ViewController: UIViewController {
         self.configureCollectionView()
         self.loadDiaryList()
         
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(starDiaryNotification),
+            name: NSNotification.Name("starDiary"),
+            object: nil
+        )
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(deleteDiaryNotification),
+            name: NSNotification.Name("deleteDiary"),
+            object: nil
+        )
 
     }
     
@@ -98,6 +110,25 @@ extension ViewController {
 //        guard let diary = notification.object as? Diary else { return }
         
     }
+    
+    // starButton이 눌렸을 때 눌렸다는 신호가 notificationCenter에 post되었고 그것을 받아 diaryList 수정
+    @objc func starDiaryNotification(notification: Notification) {
+        guard let starDiary = notification.object as? [String: Any] else { return }
+        guard let isStar = starDiary["isStar"] as? Bool else { return }
+        guard let uuidString = starDiary["uuidString"] as? String else { return }
+        
+        guard let index = self.diaryList.firstIndex(where: {$0.uuidString == uuidString}) else { return }
+        
+        self.diaryList[index].isStar = isStar
+    }
+    
+    @objc func deleteDiaryNotification(notification: Notification) {
+        guard let uuidString = notification.object as? String else { return }
+        
+        guard let index = self.diaryList.firstIndex(where: {$0.uuidString == uuidString}) else { return }
+        self.diaryList.remove(at: index)
+        self.collectionView.deleteItems(at: [IndexPath(row: index, section: 0)])
+    }
 }
 
 
@@ -126,5 +157,17 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource, 
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: (UIScreen.main.bounds.width / 2) - 20, height: 200)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        
+        guard let diaryDetailViewController = self.storyboard?.instantiateViewController(withIdentifier: "DiaryDetailViewController") as? DiaryDetailViewController else { return }
+        
+        let diary = self.diaryList[indexPath.row]
+        diaryDetailViewController.diary = diary
+        diaryDetailViewController.indexPath = indexPath
+        
+        self.navigationController?.pushViewController(diaryDetailViewController, animated: true)
+
     }
 }

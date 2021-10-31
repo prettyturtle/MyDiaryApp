@@ -80,5 +80,9 @@ class WriteDiaryViewController: UIViewController {
         
     }
     
+    // 세 항목이 모두 채워졌을 때, 등록버튼 활성화하는 함수
+    private func validateInputField() {
+        self.confirmButton.isEnabled = !(self.titleTextField.text?.isEmpty ?? true) && !(self.dateTextField.text?.isEmpty ?? true) && !(self.contentTextView.text.isEmpty ?? true)
+    }
     
 }
