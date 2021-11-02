@@ -221,7 +221,7 @@
                     </navigationItem>
                     <connections>
                         <outlet property="confirmButton" destination="p7X-IL-5z9" id="ioq-uT-DMw"/>
-                        <outlet property="contentTextView" destination="zfX-pz-VQ7" id="b4K-h6-mZ1"/>
+                        <outlet property="contentsTextView" destination="zfX-pz-VQ7" id="b4K-h6-mZ1"/>
                         <outlet property="dateTextField" destination="9qc-NW-BGl" id="dnl-wZ-RQC"/>
                         <outlet property="titleTextField" destination="19k-FE-EWe" id="ybz-bT-xAq"/>
                     </connections>
@@ -230,10 +230,10 @@
             </objects>
             <point key="canvasLocation" x="1326" y="-577"/>
         </scene>
-        <!--View Controller-->
+        <!--Star View Controller-->
         <scene sceneID="Meh-oG-XAi">
             <objects>
-                <viewController id="sLO-Cg-xFr" sceneMemberID="viewController">
+                <viewController id="sLO-Cg-xFr" customClass="StarViewController" customModule="MyDiary" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="a64-vK-wGw">
                         <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -294,6 +294,9 @@
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="fnz-sN-K5g"/>
+                    <connections>
+                        <outlet property="collectionView" destination="TNQ-G1-e1J" id="pyD-03-uYd"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="efM-oV-YDH" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
