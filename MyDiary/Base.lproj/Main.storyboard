@@ -248,7 +248,7 @@
                                     <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 </collectionViewFlowLayout>
                                 <cells>
-                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="VMT-l6-9DV">
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="StarCell" id="VMT-l6-9DV" customClass="StarCell" customModule="MyDiary" customModuleProvider="target">
                                         <rect key="frame" x="20" y="0.0" width="350" height="80"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="SM2-8n-YvG">
@@ -280,6 +280,10 @@
                                             </constraints>
                                         </collectionViewCellContentView>
                                         <size key="customSize" width="350" height="80"/>
+                                        <connections>
+                                            <outlet property="dateLabel" destination="8Pr-XA-3A3" id="So6-8m-SLx"/>
+                                            <outlet property="titleLabel" destination="Yo0-Zv-Ene" id="xRd-HV-vsn"/>
+                                        </connections>
                                     </collectionViewCell>
                                 </cells>
                             </collectionView>
