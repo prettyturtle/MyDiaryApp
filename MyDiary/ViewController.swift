@@ -36,6 +36,12 @@ class ViewController: UIViewController {
             name: NSNotification.Name("deleteDiary"),
             object: nil
         )
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(editDiaryNotification),
+            name: NSNotification.Name("editDiary"),
+            object: nil
+        )
 
     }
     
@@ -107,8 +113,14 @@ extension ViewController: WriteDiaryViewDelegate {
 // #selector
 extension ViewController {
     @objc func editDiaryNotification(notification: Notification) {
-//        guard let diary = notification.object as? Diary else { return }
+        guard let diary = notification.object as? Diary else { return }
+        guard let index = self.diaryList.firstIndex(where: { $0.uuidString == diary.uuidString }) else { return }
         
+        self.diaryList[index] = diary
+        self.diaryList = self.diaryList.sorted {
+            $0.date.compare($1.date) == .orderedDescending
+        }
+        self.collectionView.reloadData()
     }
     
     // starButton이 눌렸을 때 눌렸다는 신호가 notificationCenter에 post되었고 그것을 받아 diaryList 수정

@@ -7,6 +7,11 @@
 
 import UIKit
 
+enum DiaryEditorMode {
+    case new
+    case edit(IndexPath, Diary)
+}
+
 protocol WriteDiaryViewDelegate: AnyObject {
     func didSelectRegister(diary: Diary)
 }
@@ -24,6 +29,7 @@ class WriteDiaryViewController: UIViewController {
     
     weak var delegate: WriteDiaryViewDelegate?
     
+    var diaryEditorMode: DiaryEditorMode = .new
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -32,9 +38,30 @@ class WriteDiaryViewController: UIViewController {
         self.configureContentsTextView()
         self.confirmButton.isEnabled = false
         self.configureInputField()
+        self.configureEditMode()
     }
     
+    // 수정할 때
+    private func configureEditMode() {
+        switch diaryEditorMode {
+        case .edit(_, let diary):
+            self.titleTextField.text = diary.title
+            self.contentsTextView.text = diary.contents
+            self.dateTextField.text = self.dateToString(date: diary.date)
+            self.diaryDate = diary.date
+            self.confirmButton.title = "수정"
+        default:
+            break
+        }
+    }
     
+    // date를 string으로 바꿔주는 함수
+    private func dateToString(date: Date) -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yy년 MM월 dd일(EEEEE)"
+        formatter.locale = Locale(identifier: "ko_KR")
+        return formatter.string(from: date)
+    }
     
     // contentsTextView 꾸미기
     private func configureContentsTextView() {
@@ -73,9 +100,33 @@ class WriteDiaryViewController: UIViewController {
         guard let contents = self.contentsTextView.text else { return }
         guard let date = self.diaryDate else { return }
         
-        let diary = Diary(uuidString: UUID().uuidString, title: title, contents: contents, date: date, isStar: false)
+        switch diaryEditorMode {
+        case .new:
+            let diary = Diary(
+                uuidString: UUID().uuidString,
+                title: title,
+                contents: contents,
+                date: date,
+                isStar: false
+            )
+            
+            self.delegate?.didSelectRegister(diary: diary)
+        case .edit(_, let diary):
+            let diary = Diary(
+                uuidString: diary.uuidString,
+                title: title,
+                contents: contents,
+                date: date,
+                isStar: diary.isStar
+            )
+            
+            NotificationCenter.default.post(
+                name: NSNotification.Name("editDiary"),
+                object: diary,
+                userInfo: nil
+            )
         
-        self.delegate?.didSelectRegister(diary: diary)
+        }
         
         self.navigationController?.popViewController(animated: true)
         

@@ -28,6 +28,28 @@ class DiaryDetailViewController: UIViewController {
     
     @IBAction func tapEditButton(_ sender: UIButton) {
         print("수정 버튼을 눌렀습니다")
+        
+        guard let writeDiaryViewController = self.storyboard?.instantiateViewController(withIdentifier: "WriteDiaryViewController") as? WriteDiaryViewController else { return }
+        guard let indexPath = self.indexPath else { return }
+        guard let diary = self.diary else { return }
+        
+        writeDiaryViewController.diaryEditorMode = .edit(indexPath, diary)
+        
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(editDiaryNotification),
+            name: NSNotification.Name("editDiary"),
+            object: nil
+        )
+        
+        self.navigationController?.pushViewController(writeDiaryViewController, animated: true)
+    }
+    
+    @objc func editDiaryNotification(notification: Notification) {
+        print("editDiaryNotification Notification.default.addObserver 가 실행 되었습니다")
+        guard let diary = notification.object as? Diary else { return }
+        self.diary = diary
+        self.configureView()
     }
     
     @IBAction func tapDeleteButton(_ sender: UIButton) {

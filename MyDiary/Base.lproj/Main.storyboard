@@ -145,7 +145,7 @@
         <!--Write Diary View Controller-->
         <scene sceneID="X2A-jN-qBJ">
             <objects>
-                <viewController id="OgT-ta-eON" customClass="WriteDiaryViewController" customModule="MyDiary" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="WriteDiaryViewController" id="OgT-ta-eON" customClass="WriteDiaryViewController" customModule="MyDiary" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="ET4-9o-xw7">
                         <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
