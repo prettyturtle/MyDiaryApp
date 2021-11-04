@@ -18,17 +18,28 @@ class DiaryDetailViewController: UIViewController {
     var diary: Diary?
     var indexPath: IndexPath?
     
-    
     override func viewDidLoad() {
         super.viewDidLoad()
 
         self.configureView()
+        
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(starDiaryNotification),
+            name: NSNotification.Name("starDiary"),
+            object: nil
+        )
+        
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(deleteDiaryNotification),
+            name: NSNotification.Name("deleteDiary"),
+            object: nil
+        )
     }
     
     
     @IBAction func tapEditButton(_ sender: UIButton) {
-        print("수정 버튼을 눌렀습니다")
-        
         guard let writeDiaryViewController = self.storyboard?.instantiateViewController(withIdentifier: "WriteDiaryViewController") as? WriteDiaryViewController else { return }
         guard let indexPath = self.indexPath else { return }
         guard let diary = self.diary else { return }
@@ -46,15 +57,24 @@ class DiaryDetailViewController: UIViewController {
     }
     
     @objc func editDiaryNotification(notification: Notification) {
-        print("editDiaryNotification Notification.default.addObserver 가 실행 되었습니다")
         guard let diary = notification.object as? Diary else { return }
         self.diary = diary
         self.configureView()
     }
     
-    @IBAction func tapDeleteButton(_ sender: UIButton) {
-        print("삭제 버튼을 눌렀습니다")
+    @objc func starDiaryNotification(notification: Notification) {
+        guard let starDiary = notification.object as? [String: Any] else { return }
+        guard let diary = starDiary["diary"] as? Diary else { return }
         
+        self.diary = diary
+        self.configureView()
+    }
+    
+    @objc func deleteDiaryNotification(notification: Notification) {
+        self.navigationController?.popViewController(animated: true)
+    }
+    
+    @IBAction func tapDeleteButton(_ sender: UIButton) {
         guard let uuidString = self.diary?.uuidString else { return }
         
         // 삭제 버튼이 눌렸을 때 uuidString을 notificationCenter에 post
@@ -63,6 +83,7 @@ class DiaryDetailViewController: UIViewController {
             object: uuidString,
             userInfo: nil
         )
+        
         self.navigationController?.popViewController(animated: true)
     }
     
@@ -109,5 +130,10 @@ class DiaryDetailViewController: UIViewController {
         formatter.dateFormat = "yy년 MM월 dd일(EEEEE)"
         formatter.locale = Locale(identifier: "ko_KR")
         return formatter.string(from: date)
+    }
+    
+    // DiaryDetailViewController에서 나가면 notificationCenter의 Observer 삭제
+    deinit {
+        NotificationCenter.default.removeObserver(self)
     }
 }

@@ -56,9 +56,7 @@ class ViewController: UIViewController {
                 "isStar": $0.isStar
             ]
         }
-//        print("------------------------------")
-//        print(data)
-//        print("------------------------------")
+
         let userDefault = UserDefaults.standard
         userDefault.set(data, forKey: "diaryList")
     }
